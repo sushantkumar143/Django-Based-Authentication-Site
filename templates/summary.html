@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Health Summary - Health App{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="glass-card p-5">
+            <div class="text-center mb-4">
+                <h2 class="text-white mb-3">
+                    <i class="fas fa-chart-line me-2"></i>Health Summary
+                </h2>
+                <p class="text-white-50">Your BMI history and health tracking</p>
+            </div>
+
+            {% if bmi_records %}
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="text-center p-3" style="background: rgba(255,255,255,0.1); border-radius: 15px;">
+                        <h4 class="text-white">Total Records</h4>
+                        <h2 class="text-white">{{ total_records }}</h2>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-center p-3" style="background: rgba(255,255,255,0.1); border-radius: 15px;">
+                        <h4 class="text-white">Latest BMI</h4>
+                        <h2 class="text-white">{{ bmi_records.0.bmi }}</h2>
+                        <p class="text-white-50">{{ bmi_records.0.category }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-calendar me-2"></i>Date</th>
+                            <th><i class="fas fa-ruler-vertical me-2"></i>Height (cm)</th>
+                            <th><i class="fas fa-weight me-2"></i>Weight (kg)</th>
+                            <th><i class="fas fa-calculator me-2"></i>BMI</th>
+                            <th><i class="fas fa-tags me-2"></i>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in bmi_records %}
+                        <tr>
+                            <td>{{ record.created_at|date:"M d, Y" }}</td>
+                            <td>{{ record.height }}</td>
+                            <td>{{ record.weight }}</td>
+                            <td><strong>{{ record.bmi }}</strong></td>
+                            <td>
+                                <span class="badge 
+                                    {% if record.category == 'Normal' %}bg-success
+                                    {% elif record.category == 'Underweight' %}bg-info
+                                    {% elif record.category == 'Overweight' %}bg-warning
+                                    {% else %}bg-danger{% endif %}">
+                                    {{ record.category }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-chart-line" style="font-size: 4rem; color: rgba(255,255,255,0.3);"></i>
+                <h4 class="text-white mt-3">No Records Found</h4>
+                <p class="text-white-50">Start by calculating your BMI to see your health summary</p>
+                <a href="{% url 'bmi_calculator' %}" class="btn btn-custom mt-3">
+                    <i class="fas fa-calculator me-2"></i>Calculate BMI
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="text-center mt-4">
+                <a href="{% url 'bmi_calculator' %}" class="btn btn-outline-light">
+                    <i class="fas fa-plus me-2"></i>New Calculation
+                </a>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light ms-2">
+                    <i class="fas fa-home me-2"></i>Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

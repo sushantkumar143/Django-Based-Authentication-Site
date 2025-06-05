@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}BMI Calculator - Health App{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="glass-card p-5">
+            <div class="text-center mb-4">
+                <h2 class="text-white mb-3">
+                    <i class="fas fa-calculator me-2"></i>BMI Calculator
+                </h2>
+                <p class="text-white-50">Calculate your Body Mass Index</p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.height.id_for_label }}" class="form-label text-white">Height (cm)</label>
+                        {{ form.height }}
+                        {% if form.height.errors %}
+                            <div class="text-danger mt-1">{{ form.height.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="{{ form.weight.id_for_label }}" class="form-label text-white">Weight (kg)</label>
+                        {{ form.weight }}
+                        {% if form.weight.errors %}
+                            <div class="text-danger mt-1">{{ form.weight.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-custom">
+                        <i class="fas fa-calculator me-2"></i>Calculate BMI
+                    </button>
+                </div>
+            </form>
+
+            {% if show_result %}
+            <div class="bmi-result">
+                <h3><i class="fas fa-chart-pie me-2"></i>Your BMI Result</h3>
+                <div class="row mt-4">
+                    <div class="col-md-4 text-center">
+                        <h4>BMI</h4>
+                        <h2 class="display-4">{{ bmi_result.bmi }}</h2>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h4>Category</h4>
+                        <h3>{{ bmi_result.category }}</h3>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h4>Date</h4>
+                        <p>{{ bmi_result.created_at|date:"M d, Y" }}</p>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>BMI Categories:</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Underweight:</strong> Below 18.5</li>
+                        <li><strong>Normal:</strong> 18.5 - 24.9</li>
+                        <li><strong>Overweight:</strong> 25 - 29.9</li>
+                        <li><strong>Obese:</strong> 30 and above</li>
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="text-center mt-4">
+                <a href="{% url 'summary' %}" class="btn btn-outline-light">
+                    <i class="fas fa-history me-2"></i>View History
+                </a>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light ms-2">
+                    <i class="fas fa-home me-2"></i>Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

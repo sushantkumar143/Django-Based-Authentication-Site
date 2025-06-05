@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Health App{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="glass-card p-5 mb-4">
+            <div class="text-center mb-5">
+                <h1 class="display-4 text-white mb-3">
+                    <i class="fas fa-tachometer-alt me-3"></i>Health Dashboard
+                </h1>
+                <p class="lead text-white-50">Track your health metrics and stay fit</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="dashboard-card" onclick="redirectToFeature('bmi')">
+                        <i class="fas fa-calculator"></i>
+                        <h3>BMI Calculator</h3>
+                        <p>Calculate your Body Mass Index and track your health status</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="dashboard-card" onclick="redirectToFeature('summary')">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Health Summary</h3>
+                        <p>View your health history and track your progress over time</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function redirectToFeature(feature) {
+    {% if user.is_authenticated %}
+        if (feature === 'bmi') {
+            window.location.href = "{% url 'bmi_calculator' %}";
+        } else if (feature === 'summary') {
+            window.location.href = "{% url 'summary' %}";
+        }
+    {% else %}
+        // Redirect to login with next parameter
+        const nextUrl = feature === 'bmi' ? "{% url 'bmi_calculator' %}" : "{% url 'summary' %}";
+        window.location.href = "{% url 'login' %}?next=" + nextUrl;
+    {% endif %}
+}
+</script>
+{% endblock %}
